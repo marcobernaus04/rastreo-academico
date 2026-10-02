@@ -1089,7 +1089,18 @@ async function supaLoad(user){
 }
 function initSupa(){
   if (!(window.supabase && typeof window.supabase.createClient === "function")) return;
+  /* Si el proveedor devolvió un error al volver del inicio de sesión, se muestra en vez de ignorarlo */
+  let authErr = "";
+  try {
+    const h = new URLSearchParams(location.hash.replace(/^#/, "")), q = new URLSearchParams(location.search);
+    authErr = h.get("error_description") || q.get("error_description") || h.get("error") || q.get("error") || "";
+  } catch(e){}
   try { supa = window.supabase.createClient(SUPA_URL, SUPA_KEY); } catch(e){ supa = null; return; }
+  if (authErr){
+    loginOpen = true;
+    setLoginMsg("err", "No se pudo iniciar sesión. Detalle: " + authErr.replace(/\+/g, " ").slice(0, 300));
+    try { history.replaceState(null, "", location.pathname); } catch(e){}
+  }
   renderAccount();
   /* El botón de Google aparece solo si el proveedor está activado en el proyecto */
   fetch(SUPA_URL + "/auth/v1/settings", {headers:{apikey:SUPA_KEY}}).then(r => r.ok ? r.json() : null).then(cfg => {
