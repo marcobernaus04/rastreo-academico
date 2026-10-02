@@ -855,7 +855,7 @@ function erowHTML(e){
 
 function renderAll(){
   const fid = document.activeElement && document.activeElement.id;
-  renderHero(); renderTabs(); renderBackup();
+  renderAccount(); renderHero(); renderTabs(); renderBackup();
   if (ui.tab === "anios"){ renderFilters(); renderTree(); } else renderElectivas();
   document.body.classList.toggle("is-loading", !loaded);
   if (fid){ const el = document.getElementById(fid); if (el && el !== document.activeElement && !el.closest("[hidden]")) el.focus({preventScroll:true}); }
@@ -1039,16 +1039,18 @@ function copyText(){
 /* ---- Cuenta en la nube (Supabase), para la versión web fuera de Claude ---- */
 const SUPA_URL = "https://jipwwejdqkhhunigbtro.supabase.co";
 const SUPA_KEY = "sb_publishable_Jx8s6NsUee8A2uLXVzEE1w_wp6Tnf_z";
-let supa = null, supaUser = null, supaBusy = false, loginOpen = false, googleOn = false;
+let supa = null, supaAuthUser = null, supaUser = null, supaBusy = false, loginOpen = false, googleOn = false;
 
 function renderAccount(){
   const el = $("#account");
   el.hidden = !supa;
-  $("#login").hidden = !(supa && loginOpen && !supaUser);
+  const who = supaUser || supaAuthUser;
+  if (who) loginOpen = false;
+  $("#login").hidden = !(supa && loginOpen && !who);
   $("#googleRow").hidden = !googleOn;
   if (!supa) return;
-  el.innerHTML = supaUser
-    ? "<b>" + esc(supaUser.email || "Sesión iniciada") + '</b><button type="button" class="ghost" id="btnLogout" data-action="logout">Cerrar sesión</button>'
+  el.innerHTML = who
+    ? "<b>" + esc(who.email || "Sesión iniciada") + '</b><button type="button" class="ghost" id="btnLogout" data-action="logout">Cerrar sesión</button>'
     : '<button type="button" class="ghost go" id="btnLogin" data-action="login-toggle" aria-expanded="' + loginOpen + '" aria-controls="login">Iniciar sesión</button>';
 }
 function setLoginMsg(kind, text){
@@ -1095,7 +1097,10 @@ function initSupa(){
     renderAccount();
   }).catch(() => {});
   supa.auth.onAuthStateChange((ev, session) => {
-    if (session && session.user && !supaUser) setTimeout(() => supaLoad(session.user), 0);
+    /* La tarjeta de inicio de sesión se cierra apenas hay sesión, sin esperar a que cargue el progreso */
+    supaAuthUser = session && session.user ? session.user : null;
+    renderAccount();
+    if (supaAuthUser && !supaUser) setTimeout(() => supaLoad(supaAuthUser), 0);
   });
 }
 
