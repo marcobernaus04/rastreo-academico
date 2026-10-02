@@ -13,9 +13,12 @@ Seguimiento del plan de estudio de **Ingeniería en Sistemas de Información (UT
 
 ## Cómo usarla
 
-Es un solo archivo: abrí `index.html` en el navegador. No necesita instalación ni servidor.
+Abrila en https://marcobernaus04.github.io/rastreo-academico/ o descargá `index.html` y abrilo en el navegador. No necesita instalación.
 
-Abierta así, el progreso se guarda en el navegador (`localStorage`). La misma página publicada como Artifact en claude.ai guarda el progreso en la cuenta de cada persona.
+- **Sin iniciar sesión**, el progreso se guarda en el navegador (`localStorage`).
+- **Con sesión iniciada** (enlace por mail, sin contraseña), el progreso se guarda en la nube con Supabase y se ve igual desde cualquier dispositivo. La primera vez que entrás con una cuenta, se sube lo que ya tenías en ese navegador.
+
+La clave de Supabase que aparece en el código es la pública (publishable). Cada persona solo puede leer y modificar su propia fila, por las reglas de seguridad de la tabla.
 
 ## Notas
 
