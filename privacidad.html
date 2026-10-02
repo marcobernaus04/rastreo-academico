@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Política de privacidad · Mi Plan ISI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F3F5F8;--surface:#FFFFFF;--ink:#131B2A;--muted:#566174;--line:#DCE1E9;--accent:#2446C7}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0E131B;--surface:#161D28;--ink:#E7EBF2;--muted:#9AA5B7;--line:#2A3443;--accent:#8EA2FF;color-scheme:dark}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:40px clamp(16px,4vw,40px) 72px}
+h1{font-family:"Archivo","Arial Narrow",system-ui,sans-serif;font-stretch:115%;font-weight:800;font-size:clamp(30px,5vw,42px);line-height:1.05;letter-spacing:-.02em;margin:0 0 8px;text-wrap:balance}
+h2{font-family:"Archivo","Arial Narrow",system-ui,sans-serif;font-stretch:108%;font-weight:720;font-size:20px;margin:32px 0 8px}
+p,li{max-width:65ch}
+p{margin:0 0 12px}
+ul{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:6px}
+.meta{color:var(--muted);margin-bottom:28px}
+a{color:var(--accent);text-underline-offset:3px}
+.back{display:inline-block;margin-bottom:28px;font-weight:600}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="./">← Volver a Mi Plan ISI</a>
+  <h1>Política de privacidad</h1>
+  <p class="meta">Mi Plan ISI · Última actualización: 2 de octubre de 2026</p>
+
+  <p>Mi Plan ISI es una herramienta personal y gratuita para seguir el avance en el plan de estudio de Ingeniería en Sistemas de Información (UTN, Plan 2023). No es un producto oficial de la UTN ni está vinculada a la universidad.</p>
+
+  <h2>Qué datos se guardan</h2>
+  <ul>
+    <li><strong>Sin iniciar sesión:</strong> tu progreso se guarda solo en tu navegador. No sale de tu dispositivo.</li>
+    <li><strong>Con sesión iniciada:</strong> se guarda tu dirección de mail, para identificar tu cuenta, y tu progreso académico: el estado de cada materia, las notas, las electivas, el dictado y las copias que hayas guardado.</li>
+    <li><strong>Si entrás con Google:</strong> la app recibe de Google tu mail y los datos básicos de tu perfil (nombre y foto). Solo se usa el mail para identificar tu cuenta. La app no accede a tu correo, tus contactos ni ningún otro dato de tu cuenta de Google.</li>
+  </ul>
+
+  <h2>Para qué se usan</h2>
+  <p>Únicamente para mostrarte tu propio progreso y mantenerlo disponible cuando entrás desde otro dispositivo. No se usan para publicidad, no se venden y no se comparten con terceros.</p>
+
+  <h2>Dónde se guardan</h2>
+  <p>Las cuentas y el progreso se almacenan en <a href="https://supabase.com/privacy" rel="noopener">Supabase</a>, un servicio de base de datos en la nube. Cada persona solo puede leer y modificar sus propios datos. El sitio se publica con GitHub Pages, que puede registrar datos técnicos de las visitas, como la dirección IP, según su propia política.</p>
+
+  <h2>Cookies y almacenamiento del navegador</h2>
+  <p>La app no usa cookies de seguimiento ni herramientas de analítica. Usa el almacenamiento del navegador para recordar tu sesión, tu progreso cuando no iniciaste sesión y preferencias de la interfaz.</p>
+
+  <h2>Cómo borrar tus datos</h2>
+  <ul>
+    <li>El progreso guardado en el navegador se borra eliminando los datos del sitio desde la configuración del navegador.</li>
+    <li>Para eliminar tu cuenta y todo tu progreso de la nube, abrí un pedido en el <a href="https://github.com/marcobernaus04/rastreo-academico/issues" rel="noopener">repositorio del proyecto</a>.</li>
+  </ul>
+
+  <h2>Cambios</h2>
+  <p>Si esta política cambia, la versión actualizada se publica en esta misma página con su fecha.</p>
+
+  <footer>El código de Mi Plan ISI es público: <a href="https://github.com/marcobernaus04/rastreo-academico" rel="noopener">github.com/marcobernaus04/rastreo-academico</a></footer>
+</main>
+</body>
+</html>
