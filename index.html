@@ -243,6 +243,8 @@ input,select{padding:8px 10px;border:1px solid var(--line-strong);border-radius:
 .eform .fnote.err{color:var(--warn);font-weight:600}
 
 .account{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.grow{display:grid;gap:10px;justify-items:start;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.grow p{margin:0;color:var(--muted);font-size:13.5px}
 .account b{font-weight:600;color:var(--ink);overflow-wrap:anywhere}
 /* Guardar progreso */
 .top-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
@@ -332,7 +334,11 @@ footer p{margin:0;max-width:80ch}
 
   <section class="backup" id="login" aria-labelledby="loginT" hidden>
     <div class="backup-head"><h2 id="loginT">Iniciar sesión</h2><button type="button" class="textbtn" id="loginClose" data-action="login-toggle">Cerrar</button></div>
-    <p class="intro">Con una cuenta, tu progreso se guarda en la nube y lo ves igual desde cualquier dispositivo. Escribí tu mail y te mandamos un enlace para entrar, sin contraseña.</p>
+    <p class="intro">Con una cuenta, tu progreso se guarda en la nube y lo ves igual desde cualquier dispositivo. No hace falta contraseña.</p>
+    <div class="grow" id="googleRow" hidden>
+      <button type="button" class="btn" id="btnGoogle" data-action="login-google">Entrar con Google</button>
+      <p>O pedí un enlace por mail:</p>
+    </div>
     <form class="snapform" id="loginForm" novalidate>
       <label class="fld" for="loginEmail"><span>Tu mail</span><input id="loginEmail" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="nombre@ejemplo.com"></label>
       <button type="submit" class="btn" id="loginSend">Enviarme el enlace</button>
@@ -1032,12 +1038,13 @@ function copyText(){
 /* ---- Cuenta en la nube (Supabase), para la versión web fuera de Claude ---- */
 const SUPA_URL = "https://jipwwejdqkhhunigbtro.supabase.co";
 const SUPA_KEY = "sb_publishable_Jx8s6NsUee8A2uLXVzEE1w_wp6Tnf_z";
-let supa = null, supaUser = null, supaBusy = false, loginOpen = false;
+let supa = null, supaUser = null, supaBusy = false, loginOpen = false, googleOn = false;
 
 function renderAccount(){
   const el = $("#account");
   el.hidden = !supa;
   $("#login").hidden = !(supa && loginOpen && !supaUser);
+  $("#googleRow").hidden = !googleOn;
   if (!supa) return;
   el.innerHTML = supaUser
     ? "<b>" + esc(supaUser.email || "Sesión iniciada") + '</b><button type="button" class="ghost" id="btnLogout" data-action="logout">Cerrar sesión</button>'
@@ -1081,6 +1088,11 @@ function initSupa(){
   if (!(window.supabase && typeof window.supabase.createClient === "function")) return;
   try { supa = window.supabase.createClient(SUPA_URL, SUPA_KEY); } catch(e){ supa = null; return; }
   renderAccount();
+  /* El botón de Google aparece solo si el proveedor está activado en el proyecto */
+  fetch(SUPA_URL + "/auth/v1/settings", {headers:{apikey:SUPA_KEY}}).then(r => r.ok ? r.json() : null).then(cfg => {
+    googleOn = !!(cfg && cfg.external && cfg.external.google);
+    renderAccount();
+  }).catch(() => {});
   supa.auth.onAuthStateChange((ev, session) => {
     if (session && session.user && !supaUser) setTimeout(() => supaLoad(session.user), 0);
   });
@@ -1149,6 +1161,13 @@ document.addEventListener("click", ev => {
     case "login-toggle":
       loginOpen = !loginOpen; setLoginMsg("", ""); renderAccount();
       if (loginOpen){ scrollToEl($("#login")); $("#loginEmail").focus({preventScroll:true}); } else { const b = $("#btnLogin"); if (b) b.focus(); }
+      break;
+    case "login-google":
+      if (!supa) break;
+      setLoginMsg("", "Abriendo Google…");
+      supa.auth.signInWithOAuth({provider:"google", options:{redirectTo: location.origin + location.pathname}}).then(
+        res => { if (res.error) setLoginMsg("err", "No se pudo abrir el inicio de sesión con Google. Probá con el enlace por mail."); },
+        () => setLoginMsg("err", "No se pudo abrir el inicio de sesión con Google. Revisá tu conexión."));
       break;
     case "logout":
       if (!supa) break;
